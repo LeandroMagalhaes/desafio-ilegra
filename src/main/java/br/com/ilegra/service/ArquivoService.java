@@ -32,33 +32,6 @@ public class ArquivoService {
         }
     }
 
-    private void salvarArquivoTratado(ArquivoDTO arquivoDTO) throws DesafioException {
-
-        File diretorioSaida = new File(DesafioEnum.PATH_ARQUIVO_SAIDA.getValor());
-        if (diretorioSaida.exists() || diretorioSaida.mkdirs()) {
-            File arquivo = new File(String.valueOf(diretorioSaida), arquivoDTO.getNomeArquivo());
-
-            try (FileWriter fileWriter = new FileWriter(arquivo, false);) {
-                PrintWriter printWriter = new PrintWriter(fileWriter);
-
-                printWriter.println(montarArquivo(arquivoDTO));
-
-                printWriter.flush();
-                printWriter.close();
-            } catch (Exception e) {
-                throw new DesafioException(MensagemEnum.FALHA_SALVAR_ARQUIVO.getValor() + e);
-            }
-        }
-    }
-
-    public String montarArquivo(ArquivoDTO arquivoDTO) {
-
-        return MensagemEnum.MSG001.getValor() + arquivoDTO.getQuantidadeClientes() + "\n\r" +
-                MensagemEnum.MSG002.getValor() + arquivoDTO.getQuantidadeVendedores() + "\n\r" +
-                MensagemEnum.MSG003.getValor() + arquivoDTO.getIdMaiorVenda() + "\n\r" +
-                MensagemEnum.MSG004.getValor() + arquivoDTO.getNomePiorVendedor() + "\n\r";
-    }
-
     private ArquivoDTO processarArquivo(File arquivo) throws DesafioException {
 
         String caminhoArquivo = arquivo.getAbsolutePath();
@@ -96,6 +69,25 @@ public class ArquivoService {
         }
     }
 
+    private void salvarArquivoTratado(ArquivoDTO arquivoDTO) throws DesafioException {
+
+        File diretorioSaida = new File(DesafioEnum.PATH_ARQUIVO_SAIDA.getValor());
+        if (diretorioSaida.exists() || diretorioSaida.mkdirs()) {
+            File arquivo = new File(String.valueOf(diretorioSaida), arquivoDTO.getNomeArquivo());
+
+            try (FileWriter fileWriter = new FileWriter(arquivo, false);) {
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+
+                printWriter.println(montarArquivo(arquivoDTO));
+
+                printWriter.flush();
+                printWriter.close();
+            } catch (Exception e) {
+                throw new DesafioException(MensagemEnum.FALHA_SALVAR_ARQUIVO.getValor() + e);
+            }
+        }
+    }
+
     private static void calcularValorVendas(VendaDTO vendaDTO) {
 
         if (Objects.nonNull(vendaDTO.getProdutos()) && !vendaDTO.getProdutos().isEmpty()) {
@@ -125,6 +117,14 @@ public class ArquivoService {
 
         return menorVenda.map(vendaDTO -> vendaDTO.getVendedor().getNome())
                 .orElse(null);
+    }
+
+    public String montarArquivo(ArquivoDTO arquivoDTO) {
+
+        return MensagemEnum.MSG001.getValor() + arquivoDTO.getQuantidadeClientes() + "\n\r" +
+                MensagemEnum.MSG002.getValor() + arquivoDTO.getQuantidadeVendedores() + "\n\r" +
+                MensagemEnum.MSG003.getValor() + arquivoDTO.getIdMaiorVenda() + "\n\r" +
+                MensagemEnum.MSG004.getValor() + arquivoDTO.getNomePiorVendedor() + "\n\r";
     }
 
 }
