@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class ArquivoService {
 
@@ -112,26 +109,22 @@ public class ArquivoService {
 
     private Long buscarMaiorVendaPorId(List<VendaDTO> vendas) {
 
-        VendaDTO maiorVenda = VendaDTO.builder().valorVenda(0D).build();
-        for (VendaDTO vendaDTO : vendas) {
-            if (vendaDTO.getValorVenda() > maiorVenda.getValorVenda()) {
-                maiorVenda = vendaDTO;
-            }
-        }
+        Optional<VendaDTO> maiorVenda = vendas.stream().max(
+                Comparator.comparingDouble(VendaDTO::getValorVenda)
+        );
 
-        return maiorVenda.getId();
+        return maiorVenda.map(VendaDTO::getId)
+                .orElse(null);
     }
 
     private String buscarMenorVendaPorVendedor(List<VendaDTO> vendas) {
 
-        VendaDTO menorVenda = VendaDTO.builder().valorVenda(0D).build();
-        for (VendaDTO venda : vendas) {
-            if (menorVenda.getValorVenda() < venda.getValorVenda()) {
-                menorVenda = venda;
-            }
-        }
+        Optional<VendaDTO> menorVenda = vendas.stream().min(
+                Comparator.comparingDouble(VendaDTO::getValorVenda)
+        );
 
-        return menorVenda.getVendedor().getNome();
+        return menorVenda.map(vendaDTO -> vendaDTO.getVendedor().getNome())
+                .orElse(null);
     }
 
 }

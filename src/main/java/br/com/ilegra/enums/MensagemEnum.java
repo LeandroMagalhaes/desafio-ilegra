@@ -16,6 +16,7 @@ public enum MensagemEnum {
     FALHA_PROCESSAR_VENDAS("Erro ao processar as Vendas, Tamanho Inválido! "),
     FALHA_PROCESSAR_PRODUTOS("Erro ao processar os Produtos! "),
     FALHA_SALVAR_ARQUIVO("Falha ao Salvar o Arquivo! "),
+    FALHA_OUVINTE("Falha ao Iniciar o Ouvinte!"),
     ;
 
     private final String valor;
